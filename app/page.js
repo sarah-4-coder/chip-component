@@ -1,19 +1,32 @@
 "use client";
-import React, { useRef, useState,useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import Chip from "@/components/Chip";
 //Used Shadcn for the input component
 import { Input } from "@/components/ui/input";
-import { Suggestions } from "@/constants/Suggestions";
+// import { Suggestions } from "@/constants/Suggestions";
 
 function Page() {
   const [chipItems, setChipItems] = useState([]);
   const [input, setInput] = useState("");
+  //this is for showing suggestion while typing in the input bar
   const [suggestions, setSuggestions] = useState([]);
   const [isFocus, setIsFocus] = useState(false);
 
+  //fetching data from the server
+  const [fetchedData,setFetchedData]=useState([]);
+
   const inputRef = useRef(null);
   const suggestionRef = useRef(null);
+
+  useEffect(function () {
+    async function getSuggestions() {
+      const res = await fetch("http://localhost:3005/Suggestions");
+      const data = await res.json();
+      setFetchedData(data);
+    }
+    getSuggestions();
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -42,7 +55,7 @@ function Page() {
     const inputValue = e.target.value;
     setInput(inputValue);
 
-    const filteredSuggestions = Suggestions.filter(
+    const filteredSuggestions = fetchedData.filter(
       (suggestion) =>
         suggestion.name.toLowerCase().includes(inputValue.toLowerCase()) ||
         suggestion.email.toLowerCase().includes(inputValue.toLowerCase())
@@ -67,11 +80,11 @@ function Page() {
 
   function handleFocus() {
     setIsFocus(true);
-    setSuggestions(Suggestions);
+    setSuggestions(fetchedData);
   }
 
   return (
-    <section className="md:w-[50%] mx-auto md:mt-10 mt-5 w-full max-md:px-5" >
+    <section className="md:w-[50%] mx-auto md:mt-10 mt-5 w-full max-md:px-5">
       <div className="flex  min-h-[50px] flex-wrap items-center gap-1 rounded-xl px-4 py-2 bg-gray-100">
         <Image
           src="/assets/icons/search.svg"
@@ -99,7 +112,10 @@ function Page() {
         ))}
       </div>
       {isFocus && (
-        <div ref={suggestionRef} className="mt-5 lg:w-[60%] max-md:w-[90%] overflow-y-auto max-h-[20rem] custom-scrollbar">
+        <div
+          ref={suggestionRef}
+          className="mt-5 lg:w-[60%] max-md:w-[90%] overflow-y-auto max-h-[20rem] custom-scrollbar"
+        >
           {suggestions.length > 0 && (
             <ul className="bg-gray-50 rounded shadow-lg">
               {suggestions.map((suggestion, index) => (
