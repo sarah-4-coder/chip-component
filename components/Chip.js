@@ -8,7 +8,7 @@ function Chip({ name, email, onDelete }) {
   return (
     <div>
       <Badge  className="bg-slate-700">
-        <span className="pr-2 max-md:text-lg ">
+        <span className="pr-2  ">
           {name} {email}
         </span>
         <button

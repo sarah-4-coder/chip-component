@@ -78,7 +78,7 @@ function Page() {
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           onFocus={() => setIsFocus(true)}
-          className="w-[80%] placeholder:font-medium border-none shadow-none outline-none bg-gray-100 focus-visible:right-0 focus-visible:ring-transparent focus-visible:ring-offset-0"
+          className="w-[80%] placeholder:font-medium max-md:placeholder:text-md border-none shadow-none outline-none bg-gray-100 focus-visible:right-0 focus-visible:ring-transparent focus-visible:ring-offset-0"
         />
         {chipItems.map((item, index) => (
           <Chip
