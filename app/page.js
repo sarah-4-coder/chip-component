@@ -4,29 +4,16 @@ import Image from "next/image";
 import Chip from "@/components/Chip";
 //Used Shadcn for the input component
 import { Input } from "@/components/ui/input";
-// import { Suggestions } from "@/constants/Suggestions";
+import { Suggestions } from "@/constants/Suggestions";
 
 function Page() {
   const [chipItems, setChipItems] = useState([]);
   const [input, setInput] = useState("");
-  //this is for showing suggestion while typing in the input bar
   const [suggestions, setSuggestions] = useState([]);
   const [isFocus, setIsFocus] = useState(false);
 
-  //fetching data from the server
-  const [fetchedData,setFetchedData]=useState([]);
-
   const inputRef = useRef(null);
   const suggestionRef = useRef(null);
-
-  useEffect(function () {
-    async function getSuggestions() {
-      const res = await fetch("http://localhost:3005/Suggestions");
-      const data = await res.json();
-      setFetchedData(data);
-    }
-    getSuggestions();
-  }, []);
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -55,7 +42,7 @@ function Page() {
     const inputValue = e.target.value;
     setInput(inputValue);
 
-    const filteredSuggestions = fetchedData.filter(
+    const filteredSuggestions = Suggestions.filter(
       (suggestion) =>
         suggestion.name.toLowerCase().includes(inputValue.toLowerCase()) ||
         suggestion.email.toLowerCase().includes(inputValue.toLowerCase())
@@ -80,7 +67,7 @@ function Page() {
 
   function handleFocus() {
     setIsFocus(true);
-    setSuggestions(fetchedData);
+    setSuggestions(Suggestions);
   }
 
   return (
